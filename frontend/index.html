@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head><meta charset="UTF-8"><title>Zar Site</title></head>
+<body>
+  <h1>Зар оруулах</h1>
+  <form id="adForm">
+    <input name="title" placeholder="Гарчиг" required /><br/>
+    <input name="price" placeholder="Үнэ" required /><br/>
+    <input name="contact" placeholder="Утас" required /><br/>
+    <textarea name="desc" placeholder="Тайлбар" required></textarea><br/>
+    <button type="submit">Илгээх</button>
+  </form>
+
+  <h2>Сүүлийн зарууд:</h2>
+  <ul id="adsList"></ul>
+
+  <script>
+  const backendUrl = ""; // Доодохоор Vercel URL-г бичнэ
+
+  document.getElementById("adForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const data = Object.fromEntries(new FormData(e.target).entries());
+    const res = await fetch(backendUrl + "/submit", {
+      method: "POST",
+      headers: { "Content-Type":"application/json" },
+      body: JSON.stringify(data)
+    });
+    if (res.ok) {
+      alert("Амжилттай илгээгдлээ");
+      e.target.reset();
+      loadAds();
+    } else alert("Алдаа");
+  });
+
+  async function loadAds() {
+    const res = await fetch(backendUrl + "/list");
+    const ads = await res.json();
+    document.getElementById("adsList").innerHTML = "";
+    ads.forEach(a => {
+      const li = document.createElement("li");
+      li.textContent = `${a.title} - ${a.price}₮ (${a.contact})`;
+      document.getElementById("adsList").appendChild(li);
+    });
+  }
+
+  loadAds();
+  </script>
+</body>
+</html>
