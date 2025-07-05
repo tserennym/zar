@@ -35,3 +35,7 @@ app.get("/list", async (req, res) => {
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on ${port}`));
+app.get("/", (req, res) => {
+  res.send("Zar backend API is working!");
+});
+
